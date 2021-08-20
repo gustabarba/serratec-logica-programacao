@@ -1,0 +1,3 @@
+const CHAVEAPI = "JSU18O98A87F57R5654A97DEG4";
+const ATRASOUPLOAD = "20000";
+const SERVIDORPAI = "https://google.com";
