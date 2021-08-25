@@ -1,3 +1,31 @@
+/*
+# Serratec - Parque Tecnológico Região Serrana
+ *  Lógica de Programação - Prof. Moises do Amaral Baddini
+ * Atividade: Elicitação de Requisitos
+ * Squad: GPS - Group of Programming Students
+ * Autor (Descrição): Gustavo Barbosa 
+ * Arquivo: valeTransporte.js
+ * Elaboração do Requsito: 22/08/2021
+ 
+## Descrição:
+Você foi contratado para desenvolver um sistema de vale transporte, que cobra tarifas diferentes de acordo com a a distância percorrida por cada passageiro. A empresa presta serviço em três modalidades: convencional, executivo e leito, e cobra por quilômetro rodado, respectivamente: R$0,24; R$0,30; R$0,40. 
+
+O sistema aceita dois tipos de cartão: o dos motoristas, e o dos passageiros. 
+
+No início da viagem, o motorista aproxima o cartão do validador, e informa duas coisas: a modalidade na qual vai trabalhar, e a distância total do trajeto, liberando o sistema para registrar cobranças. 
+
+Para cobrar a tarifa, o sistema deve fazer dois tipos de leitura do cartão: de embarque, e desembarque. 
+
+Na leitura de embarque, o sistema consulta a quilometragem na qual o veículo se encontra, e só deve admitir o passageiro caso ele possua saldo para cobrir, pelo menos, 40% do trajeto restante. Nesse momento, ele deve descontar a tarifa integral (como se o passageiro fosse até o último ponto).
+
+Na leitura de desembarque, o sistema consulta novamente onde foi feito o embarque (não precisa guardar na memória interna, já fica gravado no cartão), subtrai da quilometragem atual, e calcula o valor a ser devolvido, ou debitado da próxima recarga, informando ao passageiro em ambas as situações.
+
+Ao fim da viagem, o motorista aproxima novamente o seu cartão, para encerrar o turno. Nessa hora, caso ainda haja passageiros que não registraram o desembarque, o sistema deve informá-lo quantos são, e perguntar se ele deseja realmente proceder com o encerramento. Após encerrado o turno, o sistema deve mostrar um balanço da viagem, incluindo a quantidade total de pessoas transportadas, e o saldo total arrecadado.
+
+Esse aqui é um extra que eu bolei e resolvi trocar pra não enrolar muito a galera.
+Ainda têm alguns comportamentos indesejados, mas no geral funciona.
+
+*/
 const prompt = require('prompt-sync')();
 
 var modalidade = '';
@@ -8,7 +36,6 @@ var totalPassageiros = 0;
 var totalDesembarques = 0;
 var totalSaldo = 0;
 
-//Aguardando iniciar operação. O cartão do motorista dá prosseguimento.
 while(!operando){
     console.log('Cobrança inativa. Motorista, aproxime o cartão.');
     console.log('\nTipo de cartão:');
@@ -113,7 +140,7 @@ while(operando){
                     // console.log(Math.sign(kmAtual) != -1, 'km positivo?', kmAtual);
                     // console.log(kmAtual < distanciaTotal, 'km menor que fim?');
                     // console.log(saldoCartao >= tarifaIntegral * 0.4, 'suficiente p/ 40?');
-                    if(Math.sign(kmAtual) != -1 && saldoCartao >= tarifaIntegral * 0.4 && kmAtual < distanciaTotal){
+                    if(Math.sign(kmAtual) != -1 && saldoCartao >= (tarifaIntegral * .5) && kmAtual < distanciaTotal){
                         console.log('\nFoi descontado do seu saldo o valor da tarifa integral (R$' + tarifaIntegral + ').');
                         console.log('Não se esqueça de validar o cartão na saída.');
                         console.log('\nBoa viagem!');
@@ -133,19 +160,23 @@ while(operando){
                     var saldoCartao = parseFloat(prompt(''));
                     var tarifaIntegral = (distanciaTotal - kmEmbarque) * tarifaBase;
                     var tarifaReal = (kmAtual - kmEmbarque) * tarifaBase;
-                    var diferencaSaldo = tarifaIntegral - tarifaReal + saldoCartao;
-                    if(Math.sign(kmAtual) != -1 && kmAtual <= distanciaTotal && Math.sign(saldoCartao + diferencaSaldo) != -1){
-                        console.log('\nR$' + diferencaSaldo + ' foram devolvidos ao seu saldo.');
+                    var diferencaSaldo = tarifaIntegral - tarifaReal;
+                    var saldoCorrigido = saldoCartao + diferencaSaldo;
+                    if(Math.sign(kmAtual) != -1 && kmAtual <= distanciaTotal && Math.sign(saldoCorrigido) != -1){
+                        if(saldoCorrigido > 0) {
+                            console.log('\nR$' + diferencaSaldo + ' foram devolvidos ao seu saldo.');
+                        }else{
+                            console.log('\nTudo OK! Nenhum valor a ser devolvido.');
+                        }
                         saldoCartao += diferencaSaldo;
                         console.log('Saldo atual: ' + saldoCartao);
-                        console.log('Até a próxima!');
                         totalSaldo -= diferencaSaldo;
                         
                     }else{
-                        console.log('\nR$' + diferencaSaldo + ' serão descontados da próxima recarga.');
-                        console.log('Até a próxima!');
-                        totalSaldo -= diferencaSaldo;
+                        console.log('\nR$' + (diferencaSaldo * -1) + ' serão descontados da próxima recarga.');
+                        totalSaldo -= saldoCorrigido;
                     }
+                    console.log('Até a próxima!');
                     totalDesembarques++;
                     break;
                 default:
