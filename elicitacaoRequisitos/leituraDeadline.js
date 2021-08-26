@@ -35,10 +35,10 @@ for(i = 0; i < recomendados.length; i++){
 }
 
 if(paginas <= 100){
-    texto = 'Leia também: ' + (posicao == 0 ? '' : '"' + recomendados[0] + '"') + (posicao == 0 || posicao == 1 ? '' : ', ') + (posicao == 1 ? '' : '"' + recomendados[1] + '"') + '.'; 
+    texto = `Leia também: ${posicao == 0 ? '' : '"' + recomendados[0] + '"'}${posicao == 0 || posicao == 1 ? '' : ','} ${posicao == 1 ? '' : '"' + recomendados[1] + '"'}.`; 
 }else if(paginas <= 499){
-    texto = 'Leia também: ' + (posicao == 2 ? '' : '"' + recomendados[2] + '"') + (posicao == 2 || posicao == 3 ? '' : ', ') + (posicao == 3 ? '' : '"' + recomendados[3] + '"') + '.';
+    texto = `Leia também: ${posicao == 2 ? '' : '"' + recomendados[2] + '"'}${posicao ==2 || posicao == 3 ? '' : ', '} ${posicao == 3 ? '' : '"' + recomendados[3] + '"'}.`; 
 }else{
-    texto = 'Leia também: ' + (posicao == 4 ? '' : '"' + recomendados[4] + '"') + (posicao == 4 || posicao == 5 ? '' : ', ') + (posicao == 5 ? '' : '"' + recomendados[5] + '"') + '.';
+    texto = `Leia também: ${posicao == 4 ? '' : '"' + recomendados[4] + '"'}${posicao == 4 || posicao == 5 ? '' : ','} ${posicao == 5 ? '' : '"' + recomendados[5] + '"'}.`; 
 }
 console.log(texto);  
