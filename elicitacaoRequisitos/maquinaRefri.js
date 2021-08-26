@@ -65,7 +65,8 @@ while(!pagtoOK){
                     break;
                 case '3':
                 case '4':
-                    console.log('Insira outra nota!');
+                    pagtoOK++;
+                    console.log('Seu troco é R$1,01');
                     break;
             }
             break;
